@@ -64,6 +64,7 @@ class AbletonConnection:
                         data = b''.join(chunks)
                         json.loads(data.decode('utf-8'))
                         logger.info(f"Received complete response ({len(data)} bytes)")
+                        logger.info(f"DATA: {data}")
                         return data
                     except json.JSONDecodeError:
                         # Incomplete JSON, continue receiving
@@ -94,7 +95,12 @@ class AbletonConnection:
         """Send a command to Ableton and return the response"""
         if not self.sock and not self.connect():
             raise ConnectionError("Not connected to Ableton")
-        
+			
+        #if command_type=="None": 
+              #return
+        #if command_type=="NoneType": 
+              #return
+
         command = {
             "type": command_type,
             "params": params or {}
@@ -193,6 +199,7 @@ mcp = FastMCP(
 # Global connection for resources
 _ableton_connection = None
 
+
 def get_ableton_connection():
     """Get or create a persistent Ableton connection"""
     global _ableton_connection
@@ -254,7 +261,6 @@ def get_ableton_connection():
             raise Exception("Could not connect to Ableton. Make sure the Remote Script is running.")
     
     return _ableton_connection
-
 
 # Core Tool endpoints
 
@@ -659,3 +665,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#abl = get_ableton_connection()
+#result = ableton.send_command("set_tempo", {"tempo": 122})
